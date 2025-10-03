@@ -1,0 +1,44 @@
+services:
+
+  # ----------------------------------------------------------------------------
+  # API Service
+  # ----------------------------------------------------------------------------
+  api:
+    build: ./api
+    environment:
+      - COMPUTE_URL=http://compute:5000/airquality
+    ports:
+      - "8080:5000"
+    depends_on:
+      - compute
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+  
+  compute:
+    build: ./compute
+    environment:
+      - EXTERNAL_MAP_API_URL=http://external_maps:5000
+      - DATABASE_URL=http://db:5000/airquality
+    depends_on:
+      - db
+      - external_maps
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+
+  db:
+    build: ./db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+  
+  external_maps:
+    build: ./maps
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
