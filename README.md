@@ -13,7 +13,7 @@ Introduction
 
 A Web application provides a service to generate maps with real-time air pollution data. The structure of the application is shown below.
 
-![](./images/architecture.svg)
+![](./architecture.svg)
 
 - The frontend is a Web API that accepts GET requests with country names such as `/airquality?country=france`. Supported countries are Switzerland, France, Germany, Italy, Spain (in lowercase).
 - It forwards the requests to the compute module, which performs the main work.
