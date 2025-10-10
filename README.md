@@ -50,7 +50,7 @@ The Web API (file `api/app.py`) and the compute module (file `compute/app.py`) a
 You need to set up a monitoring stack to collect and visualize these metrics using Prometheus and Grafana.
 
 - Add the Prometheus and Grafana services to the `compose.yml` file.
-- Configure Prometheus to scrape the metrics both `http://api:5000/metrics` and `http://compute:5000/metrics`.
+- Configure Prometheus to scrape the metrics both `http://api/metrics` and `http://compute/metrics`.
 - Create a Grafana dashboard with a single time series graph that shows all the duration metrics from both services.
 
 

@@ -11,7 +11,7 @@ with open('map.png', 'rb') as f:
 # ----------------------------------------------------------------------------
 # API Endpoints
 # ----------------------------------------------------------------------------
-@app.route('/', methods=['GET'])
+@app.route('/airquality', methods=['GET'])
 def airquality():
     """Simulate a slow external service."""
     time.sleep(0.02) # Simulate a slow external service

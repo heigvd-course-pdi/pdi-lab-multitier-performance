@@ -7,7 +7,8 @@ import numpy as np
 
 app = Flask(__name__)
 
-EXTERNAL_MAP_API = os.getenv('EXTERNAL_MAP_API_URL')
+EXTERNAL_MAP_API_URL = os.getenv('EXTERNAL_MAP_API_URL')
+EXTERNAL_MAP_API_HOST = os.getenv('EXTERNAL_MAP_API_HOST')
 DATABASE_URL = os.getenv('DATABASE_URL')
 SUPPORTED_COUNTRIES = {'switzerland', 'france', 'germany', 'italy', 'spain'}
 
@@ -32,23 +33,24 @@ def airquality():
     if country not in SUPPORTED_COUNTRIES:
         return 'Unsupported country', 400
 
-    # Get the map from the external map service
+    # 1. Get the map from the external map service
     with EXTERNAL_API_DURATION.time():
-        response = requests.get(f'{EXTERNAL_MAP_API}?country={country}', timeout=5)
+        headers = {'Host': EXTERNAL_MAP_API_HOST} # Add Host header for the cache
+        response = requests.get(f'{EXTERNAL_MAP_API_URL}?country={country}', headers=headers, timeout=5)
     if response.status_code != 200:
         return response.text, response.status_code
     base_map = response.content
 
-    # Get real-time air quality data from the database
+    # 2. Get real-time air quality data from the database
     with DATABASE_DURATION.time():
         response = requests.get(f'{DATABASE_URL}?country={country}', timeout=5)
         data = np.array(response.json())
 
-    # Perform some computation on the data and the map
+    # 3. Perform some computation on the data and the map
     with COMPUTATION_DURATION.time():
         map_with_data = compute_map(base_map, data)
 
-    # Send the image received from the compute service as response
+    # 4. Send the image received from the compute service as response
     return map_with_data, 200, {'Content-Type': 'image/png'}
 
 

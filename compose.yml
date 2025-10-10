@@ -6,9 +6,9 @@ services:
   api:
     build: ./api
     environment:
-      - COMPUTE_URL=http://compute:5000/airquality
+      - COMPUTE_URL=http://compute/airquality
     ports:
-      - "8080:5000"
+      - "8080:80" # Expose on port 8080 to avoid permission problems
     depends_on:
       - compute
     deploy:
@@ -19,8 +19,9 @@ services:
   compute:
     build: ./compute
     environment:
-      - EXTERNAL_MAP_API_URL=http://external_maps:5000
-      - DATABASE_URL=http://db:5000/airquality
+      - EXTERNAL_MAP_API_URL=http://external_maps/airquality
+      - EXTERNAL_MAP_API_HOST=external_maps
+      - DATABASE_URL=http://db/airquality
     depends_on:
       - db
       - external_maps
